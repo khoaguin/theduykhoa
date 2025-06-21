@@ -4,19 +4,22 @@ title: "Detecting Heart Abnormalities using 1D CNN on Data You Cannot See"
 summary: Preserve sensitive training data privacy with split neural network and PySyft
 author: khoaguin
 date: '2021-10-07'
-category: ['private-secure-ai', 'medical-ai']
 usemathjax: true
-keywords: pysyft, private and secure ai 
+keywords: pysyft, ppml, medical-ai
 thumbnail: /_attachments/heartbeat.jpg
 permalink: /blog/detect-heart-abnormalities-1d-cnn-pysyft
+tags:
+  - ppml
+  - medical-ai
 ---
+
 ![](./_attachments/heartbeat.jpg)
 ## TL;DR:
 We apply the split learning architecture to train a 1D CNN model on heartbeat data and accurately detect heart abnormalities while preserving data privacy
 ### Well, that’s still too long, and words are cheap, just show me the code!
 <a href="https://github.com/khoaguin/priv-sec-ai-blog/blob/master/ecg-split-1DCNN-PySyft/ecg-split-1DCNN.ipynb" target="_blank">Here</a> you go, enjoy! And please leave a <a class="github-button" href="https://github.com/khoaguin/priv-sec-ai-blog" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true">Star</a> if you find it useful.
 
-Also, if you prefer to read on Medium and give some claps for encouragement, <a href="https://encryptedlearner.com/detecting-heart-abnormalities-using-1d-cnn-on-data-you-cannot-see-with-pysyft-735481a952d8" target="_blank">here</a> is the link.
+Also, if you prefer to read on Medium and give some claps for encouragement, <a href="https://medium.com/data-science/detecting-heart-abnormalities-using-1d-cnn-on-data-you-cannot-see-with-pysyft-735481a952d8" target="_blank">here</a> is the link.
 ## Introduction
 Machine Learning (ML) is a subfield of Artificial Intelligence where algorithms are trained to find patterns from massive datasets. These patterns are then used to make decisions and predictions on new data. One of the problems that ML faces today is data sharing: data scientists need to gather a large amount of data from data owners in order to train their algorithms. This is often not ideal, especially for sensitive data in sectors such as healthcare or finance. Split learning is one of the methods in Privacy Preserving Machine Learning (PPML) that tries to address this data privacy problem.
 

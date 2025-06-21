@@ -10,3 +10,7 @@ default:
 [group('build')]
 build:
     npx quartz build --serve
+
+[group('deploy')]
+deploy:
+    npx quartz sync
