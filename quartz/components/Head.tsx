@@ -97,6 +97,12 @@ export default (() => {
             return resource
           }
         })}
+        {/* Rybbit Analytics Script */}
+        <script
+          src="https://app.rybbit.io/api/script.js"
+          data-site-id="1435"
+          defer
+        ></script>
       </head>
     )
   }
