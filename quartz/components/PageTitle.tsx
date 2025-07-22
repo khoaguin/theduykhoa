@@ -31,9 +31,9 @@ PageTitle.css = `
 }
 
 .logo-image {
-  height: 4rem;
+  height: 8rem;
   width: auto;
-  max-width: 300px;
+  max-width: 500px;
   object-fit: contain;
   transition: opacity 0.2s ease;
 }
@@ -44,8 +44,8 @@ PageTitle.css = `
 
 @media all and (max-width: 768px) {
   .logo-image {
-    height: 3.0rem;
-    max-width: 200px;
+    height: 5rem;
+    max-width: 350px;
   }
 }
 `
