@@ -9,6 +9,7 @@ default:
 
 [group('build')]
 build:
+    # start a local web server
     npx quartz build --serve
 
 [group('deploy')]

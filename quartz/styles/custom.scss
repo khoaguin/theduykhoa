@@ -1,3 +1,46 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// Custom tag colors for blog posts
+:root {
+  --tag-ai: #4A90E2;
+  --tag-coding: #50C878;
+  --tag-web: #FF6B6B;
+  --tag-data: #9B59B6;
+  --tag-security: #E67E22;
+  --tag-medical: #1ABC9C;
+  --tag-productivity: #F39C12;
+  --tag-life: #E91E63;
+  --tag-default: #95A5A6;
+}
+
+// Enhanced dark mode styling
+[saved-theme="dark"] {
+  --tag-ai: #5DADE2;
+  --tag-coding: #58D68D;
+  --tag-web: #FF7979;
+  --tag-data: #BB8FCE;
+  --tag-security: #F8C471;
+  --tag-medical: #76D7C4;
+  --tag-productivity: #F7DC6F;
+  --tag-life: #F48FB1;
+  --tag-default: #BDC3C7;
+}
+
+// Blog-specific styling
+.blog-layout {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+// Override some base styles for blog layout
+.center {
+  max-width: 900px;
+}
+
+// Additional responsive improvements
+@media all and (max-width: 600px) {
+  .blog-layout {
+    padding: 0 1rem;
+  }
+}

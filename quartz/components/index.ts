@@ -24,30 +24,36 @@ import Comments from "./Comments"
 import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
 
-export {
-  ArticleTitle,
-  Content,
-  TagContent,
-  FolderContent,
-  Darkmode,
-  ReaderMode,
-  Head,
-  PageTitle,
-  ContentMeta,
-  Spacer,
-  TableOfContents,
-  Explorer,
-  TagList,
-  Graph,
-  Backlinks,
-  Search,
-  Footer,
-  DesktopOnly,
-  MobileOnly,
-  RecentNotes,
-  NotFound,
-  Breadcrumbs,
-  Comments,
-  Flex,
-  ConditionalRender,
-}
+export { default as ArticleTitle } from "./ArticleTitle"
+export { default as Backlinks } from "./Backlinks"
+export { default as BlogHeader } from "./BlogHeader"
+export { default as BlogPageList } from "./BlogPageList"
+export { default as Body } from "./Body"
+export { default as Breadcrumbs } from "./Breadcrumbs"
+export { default as Comments } from "./Comments"
+export { default as ConditionalRender } from "./ConditionalRender"
+export { default as ContentMeta } from "./ContentMeta"
+export { default as Darkmode } from "./Darkmode"
+export { Date } from "./Date"
+export { default as DesktopOnly } from "./DesktopOnly"
+export { default as Explorer } from "./Explorer"
+export { default as Flex } from "./Flex"
+export { default as Footer } from "./Footer"
+export { default as Graph } from "./Graph"
+export { default as Head } from "./Head"
+export { default as Header } from "./Header"
+export { default as MobileOnly } from "./MobileOnly"
+export { default as OverflowList } from "./OverflowList"
+export { PageList } from "./PageList"
+export { default as PageTitle } from "./PageTitle"
+export { default as ReaderMode } from "./ReaderMode"
+export { default as RecentNotes } from "./RecentNotes"
+export { default as Search } from "./Search"
+export { default as Spacer } from "./Spacer"
+export { default as TableOfContents } from "./TableOfContents"
+export { default as TagList } from "./TagList"
+
+export { default as NotFound } from "./pages/404"
+export { default as Content } from "./pages/Content"
+export { default as FolderContent } from "./pages/FolderContent"
+export { default as TagContent } from "./pages/TagContent"

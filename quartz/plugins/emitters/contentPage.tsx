@@ -6,7 +6,7 @@ import BodyConstructor from "../../components/Body"
 import { pageResources, renderPage } from "../../components/renderPage"
 import { FullPageLayout } from "../../cfg"
 import { pathToRoot } from "../../util/path"
-import { defaultContentPageLayout, sharedPageComponents } from "../../../quartz.layout"
+import { defaultContentPageLayout, sharedPageComponents, blogLayout } from "../../../quartz.layout"
 import { Content } from "../../components"
 import { styleText } from "util"
 import { write } from "./helpers"
@@ -46,14 +46,21 @@ async function processContent(
 }
 
 export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOpts) => {
-  const opts: FullPageLayout = {
+  const defaultOpts: FullPageLayout = {
     ...sharedPageComponents,
     ...defaultContentPageLayout,
     pageBody: Content(),
     ...userOpts,
   }
 
-  const { head: Head, header, beforeBody, pageBody, afterBody, left, right, footer: Footer } = opts
+  const blogOpts: FullPageLayout = {
+    ...sharedPageComponents,
+    ...blogLayout,
+    pageBody: Content(),
+    ...userOpts,
+  }
+
+  const { head: Head, header, beforeBody, pageBody, afterBody, left, right, footer: Footer } = defaultOpts
   const Header = HeaderConstructor()
   const Body = BodyConstructor()
 
@@ -71,6 +78,10 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
         ...left,
         ...right,
         Footer,
+        // Also include components from blog layout
+        ...blogLayout.beforeBody,
+        ...blogLayout.left,
+        ...blogLayout.right,
       ]
     },
     async *emit(ctx, content, resources) {
@@ -85,6 +96,9 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
 
         // only process home page, non-tag pages, and non-index pages
         if (slug.endsWith("/index") || slug.startsWith("tags/")) continue
+
+        // Use blog layout for the index page, default layout for others
+        const opts = slug === "index" ? blogOpts : defaultOpts
         yield processContent(ctx, tree, file.data, allFiles, opts, resources)
       }
 
@@ -95,26 +109,6 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
             `\nWarning: you seem to be missing an \`index.md\` home page file at the root of your \`${ctx.argv.directory}\` folder (\`${path.join(ctx.argv.directory, "index.md")} does not exist\`). This may cause errors when deploying.`,
           ),
         )
-      }
-    },
-    async *partialEmit(ctx, content, resources, changeEvents) {
-      const allFiles = content.map((c) => c[1].data)
-
-      // find all slugs that changed or were added
-      const changedSlugs = new Set<string>()
-      for (const changeEvent of changeEvents) {
-        if (!changeEvent.file) continue
-        if (changeEvent.type === "add" || changeEvent.type === "change") {
-          changedSlugs.add(changeEvent.file.data.slug!)
-        }
-      }
-
-      for (const [tree, file] of content) {
-        const slug = file.data.slug!
-        if (!changedSlugs.has(slug)) continue
-        if (slug.endsWith("/index") || slug.startsWith("tags/")) continue
-
-        yield processContent(ctx, tree, file.data, allFiles, opts, resources)
       }
     },
   }

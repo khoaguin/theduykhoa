@@ -66,3 +66,45 @@ export const defaultListPageLayout: PageLayout = {
   ],
   right: [],
 }
+
+// Main blog layout for the index page
+export const blogLayout: PageLayout = {
+  beforeBody: [
+    Component.BlogHeader(),
+    Component.BlogPageList(),
+  ],
+  left: [
+    Component.PageTitle(),
+    Component.MobileOnly(Component.Spacer()),
+    Component.Flex({
+      components: [
+        {
+          Component: Component.Search(),
+          grow: true,
+        },
+        { Component: Component.Darkmode() },
+        { Component: Component.ReaderMode() },
+      ],
+    }),
+    Component.Explorer(),
+  ],
+  right: [
+    Component.Graph(),
+  ],
+}
+
+// Custom layout for the main blog page (index)
+export const blogIndexLayout: PageLayout = {
+  beforeBody: [
+    Component.BlogHeader(),
+    Component.BlogPageList(),
+  ],
+  left: [],
+  right: [
+    Component.Flex({
+      components: [
+        { Component: Component.Darkmode() },
+      ],
+    }),
+  ],
+}
