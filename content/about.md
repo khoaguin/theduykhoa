@@ -4,7 +4,7 @@ title: About
 
 # About Me
 
-Hi! I'm **Khoa Nguyen** ([@khoaguin](https://github.com/khoaguin)), a researcher and engineer specializing in AI and Privacy-Preserving Technologies.
+Hi! I'm Khoa Nguyen, a researcher and engineer specializing in AI and Privacy-Preserving Technologies.
 
 ## Background
 
@@ -13,8 +13,8 @@ I finished my Master Degree at Tampere University in Finland in 2021 with a focu
 ## Current Work
 
 I am currently a software engineer at [OpenMined](https://openmined.org), working on cutting-edge privacy-preserving machine learning technologies. Currently based in Vietnam, I'm focused on:
-- [`SyftBox`](https://www.syftbox.net/): An open-source privacy-first, offline-capable AI infrastructure that enables developers to build applications, run federated learning, and advance Privacy-Enhancing Technologies (PETs) research.
-- [`syft-flwr`](https://github.com/OpenMined/syft-flwr): A privacy-preserving distributed computing framework that combines Syftbox and [Flower](https://github.com/adap/flower). Enable federated learning, analytics, and federated RAG with secure job submission, approval workflows, and offline capability.
+- [SyftBox](https://www.syftbox.net/): An open-source privacy-first, offline-capable AI infrastructure that enables developers to build applications, run federated learning, and advance Privacy-Enhancing Technologies (PETs) research.
+- [syft-flwr](https://github.com/OpenMined/syft-flwr): A privacy-preserving distributed computing framework that combines Syftbox and [Flower](https://github.com/adap/flower). Enable federated learning, analytics, and federated RAG with secure job submission, approval workflows, and offline capability.
 
 I have also been researching on privacy-preserving machine learning and AI Safety. You can find my humble scientific contributions on [Google Scholar](https://scholar.google.com/citations?user=9Cx8YUIAAAAJ&hl=en).
 

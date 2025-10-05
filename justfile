@@ -12,7 +12,7 @@ default:
 build:
     npx quartz build --serve
 
-# deploy to quartz
+# build, commit and push to GitHub, then triggers GitHub pages deployment
 [group('deploy')]
 deploy:
     npx quartz sync
