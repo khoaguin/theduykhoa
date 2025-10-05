@@ -1,8 +1,17 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { joinSegments, pathToRoot } from "../util/path"
 
-const SocialMediaIcons: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
+const SocialMediaIcons: QuartzComponent = ({ fileData, displayClass }: QuartzComponentProps) => {
+  const baseDir = pathToRoot(fileData.slug!)
+  const aboutLink = joinSegments(baseDir, "about")
+
   return (
     <div class={`social-media-compact ${displayClass || ""}`}>
+      <a href={aboutLink} class="social-icon-small" title="About">
+        <svg viewBox="0 0 24 24" width="16" height="16">
+          <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </a>
       <a href="https://x.com/khoaguin" class="social-icon-small" target="_blank" rel="noopener noreferrer" title="Twitter">
         <svg viewBox="0 0 24 24" width="16" height="16">
           <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>

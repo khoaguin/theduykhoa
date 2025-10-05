@@ -7,11 +7,12 @@ _nc := '\033[0m'
 default:
     just --list
 
+# start a local web server
 [group('build')]
 build:
-    # start a local web server
     npx quartz build --serve
 
+# deploy to quartz
 [group('deploy')]
 deploy:
     npx quartz sync

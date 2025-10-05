@@ -55,8 +55,8 @@ function getTagColor(tag: string): string {
 
 export const BlogPageList: QuartzComponent = ({ cfg, fileData, allFiles, limit, sort }: Props) => {
   const sorter = sort ?? byDateAndAlphabetical(cfg)
-  // Filter out the index page from blog post listing
-  let list = allFiles.filter(file => file.slug !== "index").sort(sorter)
+  // Filter out the index and about pages from blog post listing
+  let list = allFiles.filter(file => file.slug !== "index" && file.slug !== "about").sort(sorter)
   if (limit) {
     list = list.slice(0, limit)
   }
