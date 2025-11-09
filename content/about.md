@@ -3,7 +3,7 @@ title: About
 ---
 
 # About Me
-Hi! I'm Khoa Nguyen, a researcher and engineer specializing in AI and Privacy-Preserving Technologies.
+Hi! I'm Khoa Nguyen, a senior researcher and engineer specializing in AI and Privacy-Preserving Technologies.
 
 <img src="./_attachments/profile.png" width="250" alt="Khoa Nguyen">
 
