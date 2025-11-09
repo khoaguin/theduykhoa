@@ -24,10 +24,10 @@ I have also been researching on privacy-preserving machine learning and AI Safet
 - Cryptography & Cybersecurity
 - Distributed systems
 - Programming Languages
-- Boxing (I am having my pro debut on 25th October, 2025)
+- Boxing: I just had my pro boxing debut fight on 25th October, 2025. Here's the [link to the fight](https://www.youtube.com/watch?v=PsqkndHzhRo&t=1s) if you are interested in watching
 - Guitar
 
-## Talks
+<!-- ## Talks -->
 
 ## Connect
-Please feel free to connect with me on [GitHub](https://github.com/khoaguin), [LinkedIn](https://www.linkedin.com/in/khoa-duy-nguyen/), or [Twitter/X](https://x.com/khoaguin)!
+Please feel free to connect with me on [GitHub](https://github.com/khoaguin), [LinkedIn](https://www.linkedin.com/in/khoa-duy-nguyen/), or [X](https://x.com/khoaguin)!
