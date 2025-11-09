@@ -13,7 +13,8 @@ const config: QuartzConfig = {
     enableSPA: true,
     enablePopovers: true,
     analytics: {
-      provider: "plausible",
+      provider: "goatcounter",
+      websiteId: "theduykhoa",
     },
     locale: "en-US",
     baseUrl: "theduykhoa.com",
