@@ -122,6 +122,321 @@ The basic idea:
 
 We'll implement a **simplified 3-key version** in this series (we skip the optional one-time prekeys)
 
+---
+
+## Understand PQXDH: A Step-by-Step Visual Guide
+
+Let's break down the PQXDH protocol into digestible phases. We'll build up understanding piece by piece, then see the complete picture at the end.
+
+### Phase 1: Bob Sets Up His Keys
+
+Before Alice and Bob can communicate securely, Bob needs to prepare and publish his cryptographic keys to the server.
+
+<div style="max-width: 100%; margin: 2em auto;">
+<img src="/_attachments/e2ee/bob-publish-keys.svg" alt="Bob uploads key bundle to server" style="width: 100%; height: auto;" />
+</div>
+
+**Bob publishes a key bundle containing:**
+
+1. **Identity Key (IK<sub>B</sub>)** - Bob's long-term public key. Proves Bob's identity (like Bob's passport)
+   - Like Bob's permanent cryptographic signature
+   - Used to verify it's really Bob
+   - Ed25519 key pair
+
+2. **Signed Prekey (SPK<sub>B</sub>)** - Medium-term key for key agreement. Enables secure key exchange (like a temporary key card)
+   - Should be rotated periodically (e.g., weekly)
+   - Signed by Bob's identity key to prove authenticity
+   - X25519 key pair for Diffie-Hellman
+
+3. **Post-Quantum Prekey (PQPK<sub>B</sub>)** - Quantum-resistant key. Protects against quantum computers (future-proofing)
+   - Also signed by Bob's identity key
+   - Kyber1024 public key for post-quantum security
+   - Protects against future quantum computer attacks
+
+4. **One-time Prekeys (optional)** - Single-use keys for extra security
+   - EC one-time keys (OPK<sub>B1</sub>, OPK<sub>B2</sub>, ...)
+   - PQ one-time keys (PQOPK<sub>B1</sub>, PQOPK<sub>B2</sub>, ...)
+   - *We'll skip these in our implementation*
+
+Bob uploads his key bundle to the server, which stores it. The server doesn't know Bob's private keys—only his public keys. Anyone (like Alice) can now fetch Bob's public keys to initiate a secure conversation with him.
+
+<div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1)); border-left: 4px solid #8b5cf6; padding: 1.5em; border-radius: 8px; margin: 2em 0;">
+
+**📓 Note**
+
+**In our implementation**, we'll focus on the 3-key version and skip the optional one-time prekeys:
+- Identity key (IK<sub>B</sub>)
+- Signed prekey (SPK<sub>B</sub>)
+- PQ prekey (PQPK<sub>B</sub>)
+
+This gives us all the essential security properties while keeping the code simpler to understand.
+
+*Also, all public keys have a corresponding private key.*
+
+</div>
+
+---
+
+### Phase 2: Alice Computes the Shared Secret
+
+Now that Bob's keys are available on the server, Alice wants to send an encrypted message to Bob. First, she needs to establish a shared secret that only she and Bob know.
+
+<div style="max-width: 100%; margin: 2em auto;">
+<img src="/_attachments/e2ee/alice-computes-sk.svg" alt="Alice fetches Bob's keys and computes shared secret" style="width: 100%; height: auto;" />
+</div>
+
+**Here's what Alice does:**
+
+**Step 1: Fetch Bob's Key Bundle**
+
+Alice retrieves Bob's public keys from the server:
+- Identity key (IK<sub>B</sub>)
+- Signed prekey (SPK<sub>B</sub>)
+- Post-quantum prekey (PQPK<sub>B</sub>)
+
+and verifies all the signatures on the keys.
+
+**Step 2: Generate Her Own Keys**
+
+Alice generates:
+- **Identity key pair (IK<sub>A</sub>)** - Her long-term identity
+- **Ephemeral key pair (EK<sub>A</sub>)** - A fresh, temporary key just for this conversation (note that this is different than the optional one-time prekeys)
+
+**Step 3: Perform Multiple Diffie-Hellman (DH) Exchanges**
+
+Alice combines her keys with Bob's keys through multiple DH operations:
+
+- **DH1 = DH(IK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)** - Alice's identity private key × Bob's signed public key
+  - Provides mutual authentication
+  - Bob can verify it's really Alice
+
+- **DH2 = DH(EK<sub>A_priv</sub>, IK<sub>B_pub</sub>)** - Alice's ephemeral private key × Bob's identity public key
+  - Provides mutual authentication from the other direction
+  - Alice can verify it's really Bob
+
+- **DH3 = DH(EK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)** - Alice's ephemeral private key × Bob's signed public key
+  - Provides forward secrecy
+  - Even if long-term keys are compromised later, this conversation stays secret
+
+**Step 4: Add Post-Quantum Protection**
+
+Alice uses Bob's quantum-resistant key with a Post-Quantum Key Encapsulation Mechanism (PQKEM):
+
+- **(CT, SS) = PQKEM-ENC(PQPK<sub>B</sub>)** - Encapsulate a shared secret using Bob's PQ public key
+  - Returns a tuple: **CT** (ciphertext) and **SS** (shared secret)
+  - This protects against future quantum computers (IND-CCA post-quantum security)
+  - Only Bob can decapsulate using **PQKEM-DEC(PQPK<sub>B_priv</sub>, CT)** to recover the shared secret SS
+
+**Step 5: Combine Everything into a Shared Key**
+
+Alice feeds all the DH results and the quantum secret into a Key Derivation Function (KDF):
+
+$$
+SK = KDF(DH1 \parallel DH2 \parallel DH3 \parallel SS)
+$$
+
+This **SK (Shared Key)** is now the secret Alice and Bob share. Alice will use it to encrypt her message.
+
+<div style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.15), rgba(13, 148, 136, 0.15)); border-left: 4px solid #14b8a6; padding: 1.5em; border-radius: 8px; margin: 2em 0;">
+
+**💡 Why multiple DH exchanges?**
+
+Each DH operation serves a specific security purpose:
+- **DH1 & DH2**: Mutual authentication - both parties verify each other's identity
+- **DH3**: Forward secrecy - protects past messages even if long-term keys leak later
+- **SS**: Post-quantum security - protects against future quantum computer attacks
+
+Combining them means an attacker would need to break ALL of them to decrypt the message. This is called "defense in depth."
+
+</div>
+
+**At this point:**
+- Alice has computed the shared secret SK
+- Bob doesn't know SK yet (he'll compute it later when he receives Alice's message)
+- Alice is ready to encrypt and send her initial message
+
+---
+
+### Phase 3: Alice Sends the Initial Encrypted Message
+
+Alice now has the shared key SK. She can encrypt her message and send it to Bob through the server.
+
+<div style="max-width: 100%; margin: 2em auto;">
+<img src="/_attachments/e2ee/alice-sends-enc-message.svg" alt="Alice sends encrypted message to Bob via server" style="width: 100%; height: auto;" />
+</div>
+
+**Step 1: Create Associated Data**
+
+Alice constructs additional authenticated data that binds the encryption to both parties' identities:
+
+$$
+AD = \text{Encode}(IK_A) \parallel \text{Encode}(IK_B)
+$$
+
+This prevents man-in-the-middle attacks—the encryption is cryptographically tied to Alice and Bob's specific identities.
+
+**Step 2: Encrypt the Message**
+
+Alice encrypts her plaintext message using an AEAD (Authenticated Encryption with Associated Data) scheme:
+
+$$
+\text{ciphertext} = \text{AEAD-Encrypt}(key=SK,~ ad=AD,~ plaintext=\text{message})
+$$
+
+AEAD provides both:
+- **Confidentiality**: Only someone with SK can decrypt
+- **Authenticity**: Any tampering with the ciphertext or AD is detected
+
+**Step 3: Construct the Initial Message**
+
+Alice creates a message bundle containing everything Bob needs to derive the same SK and decrypt:
+
+```
+Initial Message = {
+  IK_A,              // Alice's identity public key
+  EK_A,              // Alice's ephemeral public key
+  CT,                // PQ ciphertext from PQKEM-ENC
+  identifiers,       // Which of Bob's prekeys Alice used
+  ciphertext         // The encrypted message
+}
+```
+
+**Step 4: Send to Server**
+
+Alice sends this initial message to the server, which forwards it to Bob.
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); border-left: 4px solid #3b82f6; padding: 1.5em; border-radius: 8px; margin: 2em 0;">
+
+**🤔 What's in the initial message and why?**
+
+- **IK<sub>A</sub> and EK<sub>A</sub>**: Bob needs Alice's public keys to compute the same DH values
+- **CT**: Bob needs this to decapsulate the PQ shared secret SS
+- **Identifiers**: Tell Bob which of his prekeys to use (in case he has multiple)
+- **Ciphertext**: The actual encrypted message
+
+Notice what's NOT sent: the shared key SK or the plaintext message. The server only sees encrypted data and public keys.
+
+</div>
+
+**At this point:**
+- Alice has sent her encrypted message
+- The server can forward it but cannot read it
+- Only Bob (with his private keys) can decrypt the message
+- Alice and Bob now share a secret communication channel
+
+---
+
+### Phase 4: Bob Receives and Decrypts Alice's Message
+
+Finally, Bob receives Alice's encrypted message and can decrypt it to read the plaintext.
+
+<div style="max-width: 100%; margin: 2em auto;">
+<img src="/_attachments/e2ee/bob-decrypts.svg" alt="Bob receives and decrypts Alice's message" style="width: 100%; height: auto;" />
+</div>
+
+**Here's what Bob does:**
+
+**Step 1: Receive the Initial Message**
+
+The server forwards Alice's initial message to Bob. Bob extracts:
+- **IK<sub>A</sub>** - Alice's identity public key
+- **EK<sub>A</sub>** - Alice's ephemeral public key
+- **CT** - The PQ ciphertext
+- **identifiers** - Which prekeys Alice used
+- **ciphertext** - The encrypted message
+
+**Step 2: Load the Correct Private Keys**
+
+Bob uses the identifiers to determine which of his private keys to use:
+- Load **IK<sub>B_priv</sub>** - His identity private key
+- Load **SPK<sub>B_priv</sub>** - Bob's signed private prekey key
+- Load **PQPK<sub>B_priv</sub>** - Bob's post quantum last-resort private prekey
+
+**Step 3: Perform the Same DH Operations**
+
+Bob performs the exact same Diffie-Hellman exchanges as Alice, but using his private keys:
+
+- **DH1 = DH(IK<sub>A_pub</sub>, SPK<sub>B_priv</sub>)** - Alice's identity public key × Bob's signed prekey private key
+- **DH2 = DH(EK<sub>A_pub</sub>, IK<sub>B_priv</sub>)** - Alice's ephemeral public key × Bob's identity private key
+- **DH3 = DH(EK<sub>A_pub</sub>, SPK<sub>B_priv</sub>)** - Alice's ephemeral public key × Bob's signed prekey private key
+
+Because of how Diffie-Hellman works, Bob gets the exact same values that Alice computed:
+- DH(IK<sub>A_pub</sub>, SPK<sub>B_priv</sub>) = DH(IK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)
+- DH(EK<sub>A_pub</sub>, IK<sub>B_priv</sub>) = DH(EK<sub>A_priv</sub>, IK<sub>B_pub</sub>)
+- DH(EK<sub>A_pub</sub>, SPK<sub>B_priv</sub>) = DH(EK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)
+
+**Step 4: Decapsulate the PQ Shared Secret**
+
+Bob uses his PQ private key to decapsulate the shared secret from the ciphertext:
+
+$$
+SS = \text{PQKEM-DEC}(PQPK_{B\_priv}, CT)
+$$
+
+This recovers the same **SS** that Alice generated during encryption.
+
+**Step 5: Derive the Same Shared Key**
+
+Bob feeds all the DH results and the quantum secret into the same KDF:
+
+$$
+SK = KDF(DH1 \parallel DH2 \parallel DH3 \parallel SS)
+$$
+
+Bob now has the exact same **SK** that Alice computed—without ever transmitting it over the network!
+
+**Step 6: Reconstruct the Associated Data**
+
+Bob reconstructs the same associated data:
+
+$$
+AD = \text{Encode}(IK_A) \parallel \text{Encode}(IK_B)
+$$
+
+**Step 7: Decrypt the Message**
+
+Bob decrypts using the AEAD scheme:
+
+$$
+\text{plaintext} = \text{AEAD-Decrypt}(key=SK,~ ad=AD,~ ciphertext)
+$$
+
+If the decryption succeeds:
+- Bob has successfully recovered Alice's message
+- The authentication check passed (proving it really came from Alice)
+- No one else could have read the message (not even the server)
+
+<div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.15)); border-left: 4px solid #22c55e; padding: 1.5em; border-radius: 8px; margin: 2em 0;">
+
+**🎉 Mission Accomplished!**
+
+Alice and Bob have successfully established end-to-end encrypted communication:
+- ✅ **Mutual authentication** - Both parties verified each other's identities
+- ✅ **Forward secrecy** - Even if long-term keys leak later, this conversation stays secret
+- ✅ **Post-quantum security** - Protected against future quantum computers
+- ✅ **Zero server knowledge** - The server never saw the plaintext or shared key
+- ✅ **Asynchronous** - Worked even though Bob was offline when Alice sent the message
+
+</div>
+
+**At this point:**
+- Bob has Alice's plaintext message
+- They share a secure communication channel
+- Neither the server nor any eavesdropper can read their messages
+- The protocol can continue with additional messages (using the Double Ratchet algorithm, which we'll cover in Part 2)
+
+---
+
+### Complete PQXDH Protocol Overview
+
+Now that you understand each phase in detail, here's the complete picture showing how all four phases work together:
+
+<div style="max-width: 100%; margin: 2em auto;">
+<img src="/_attachments/e2ee/pqxdh.svg" alt="Complete PQXDH Protocol - All Four Phases" style="width: 100%; height: auto;" />
+</div>
+
+This diagram shows the entire flow from Bob publishing his keys, through Alice computing the shared secret and sending her encrypted message, to Bob decrypting and reading the message. Each component works together to provide mutual authentication, forward secrecy, and post-quantum security.
+
 ## References
 
 - Signal. ["The PQXDH Key Agreement Protocol."](https://signal.org/docs/specifications/pqxdh/) Signal Specifications.
