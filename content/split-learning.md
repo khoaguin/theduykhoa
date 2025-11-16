@@ -13,13 +13,27 @@ tags:
   - medical-ai
 ---
 
-![](./_attachments/heartbeat.jpg)
-## TL;DR:
-We apply the split learning architecture to train a 1D CNN model on heartbeat data and accurately detect heart abnormalities while preserving data privacy
-### Well, that’s still too long, and words are cheap, just show me the code!
-<a href="https://github.com/khoaguin/priv-sec-ai-blog/blob/master/ecg-split-1DCNN-PySyft/ecg-split-1DCNN.ipynb" target="_blank">Here</a> you go, enjoy! And please leave a <a class="github-button" href="https://github.com/khoaguin/priv-sec-ai-blog" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true">Star</a> if you find it useful.
+![](/_attachments/heartbeat.jpg)
 
-Also, if you prefer to read on Medium and give some claps for encouragement, <a href="https://medium.com/data-science/detecting-heart-abnormalities-using-1d-cnn-on-data-you-cannot-see-with-pysyft-735481a952d8" target="_blank">here</a> is the link.
+<div style="background: linear-gradient(135deg, rgba(233, 196, 106, 0.1), rgba(244, 162, 97, 0.1)); border-left: 4px solid #e9c46a; padding: 1.5em; border-radius: 8px; margin: 2em 0;">
+
+## 📌 TL;DR
+
+We apply the **split learning** architecture to train a **1D CNN model** on heartbeat data and accurately detect heart abnormalities while **preserving data privacy** — the data never leaves the client's machine!
+
+**In this post, you'll learn:**
+- 🏥 How to train ML models on **sensitive medical data** without seeing it
+- 🔄 **Split learning**: cutting neural networks between client and server
+- 🛠️ Using **PySyft's VirtualMachine** for privacy-preserving ML
+- 💓 Building a **1D CNN** for ECG heart abnormality detection
+
+**Words are cheap, show me the code!**
+
+👉 <a href="https://github.com/khoaguin/priv-sec-ai-blog/blob/master/ecg-split-1DCNN-PySyft/ecg-split-1DCNN.ipynb" target="_blank" rel="noopener noreferrer">Complete Jupyter Notebook</a> | <a href="https://medium.com/data-science/detecting-heart-abnormalities-using-1d-cnn-on-data-you-cannot-see-with-pysyft-735481a952d8" target="_blank" rel="noopener noreferrer">Read on Medium</a>
+
+*If you find this useful, please ⭐ the <a href="https://github.com/khoaguin/priv-sec-ai-blog" target="_blank" rel="noopener noreferrer">repository</a>!*
+
+</div>
 ## Introduction
 Machine Learning (ML) is a subfield of Artificial Intelligence where algorithms are trained to find patterns from massive datasets. These patterns are then used to make decisions and predictions on new data. One of the problems that ML faces today is data sharing: data scientists need to gather a large amount of data from data owners in order to train their algorithms. This is often not ideal, especially for sensitive data in sectors such as healthcare or finance. Split learning is one of the methods in Privacy Preserving Machine Learning (PPML) that tries to address this data privacy problem.
 
