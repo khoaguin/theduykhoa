@@ -21,24 +21,24 @@ tags:
 
 ## 📌 TL;DR
 
-End-to-end encryption isn't just about keeping secrets from a hacker / eavesdropper —
+End-to-end encryption isn't just about keeping secrets from attackers —
 it's about building systems where users don't have to trust anyone but themselves,
-including the service provider who offers the communication service (i.e. the server).
+including the service provider (i.e., the server).
 
 In this series, we'll build a simple E2E encrypted communication system that is **post-quantum secure**
-based on the <a href="https://github.com/signalapp/libsignal" target="_blank" rel="noopener noreferrer">libsignal</a>
-library from the Signal team using **Rust**.
+using **Rust** and the <a href="https://github.com/signalapp/libsignal" target="_blank" rel="noopener noreferrer">libsignal</a>
+library from the Signal team.
 
 **In Part 1 (this post), we'll cover:**
 - 🎯 **Why** E2E encryption matters (security vs privacy vs trust)
-- 🔐 **What** the Signal Protocol offers (and its limitations)
-- 🏗️ **How** the protocol works conceptually (key exchange, encryption layers)
-- 🧠 Theory behind PQXDH and post-quantum cryptography
+- 🔐 **What** the Signal Protocol offers
+- 🏗️ **How** Post-quantum secure key exchange (PQXDH) works
+- 🧠 Theory behind post-quantum cryptography
 
 **By the end of this 3-part series, you'll have implemented:**
 - ✅ Post-quantum secure key exchange (PQXDH)
 - ✅ End-to-end encrypted file sharing
-- ✅ A working demo that encrypts and decrypts images
+- ✅ A working demo that encrypts and decrypts a file, e.g. an image
 
 *Code coming in parts 2 and 3!*
 
@@ -71,7 +71,7 @@ implementing your own E2E encryption system using `libsignal`, with clear explan
 
 ## Security vs Privacy: Understanding the Difference
 
-While **security** protects you against external eavesdroppers and attackers, **privacy** refers to your right to control how your personal information is collected, stored, and used. This distinction is crucial when comparing TLS (the technology behind HTTPS) and end-to-end encryption: 
+While **security** protects you against external eavesdroppers and attackers, **privacy** refers to your right to control how your personal information is collected, stored, and used.<sup>[[1]](https://www.okta.com/identity-101/privacy-vs-security/)</sup> This distinction is crucial when comparing TLS (the technology behind HTTPS) and end-to-end encryption:
 - TLS provides security against external threats but still allows the service provider (server) to access your data
 - E2EE delivers true privacy by ensuring that not even the service provider can read your messages—only you and your intended recipient hold the keys.
 
@@ -179,7 +179,7 @@ This gives us all the essential security properties while keeping the code simpl
 
 ### Phase 2: Alice Computes the Shared Secret
 
-Now that Bob's keys are available on the server, Alice wants to send an encrypted message to Bob. First, she needs to establish a shared secret that only she and Bob know.
+Now that Bob's keys are available on the server, Alice wants to send an encrypted message to Bob. First, she needs to fetch Bob's key bundle and establish a shared secret that only she and Bob know.
 
 <div style="max-width: 100%; margin: 2em auto;">
 <img src="/_attachments/e2ee/alice-computes-sk.svg" alt="Alice fetches Bob's keys and computes shared secret" style="width: 100%; height: auto;" />
@@ -204,9 +204,11 @@ Alice generates:
 
 **Step 3: Perform Multiple Diffie-Hellman (DH) Exchanges**
 
+<img src="/_attachments/e2ee/DH-ops.png" alt="Diffie-Hellman key exchanges between Alice and Bob" style="float: right; margin: 0 0 1em 1em; max-width: 300px;">
+
 Alice combines her keys with Bob's keys through multiple DH operations:
 
-- **DH1 = DH(IK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)** - Alice's identity private key × Bob's signed public key
+- **DH1 = DH(IK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)** - Alice's identity private key × Bob's signed public prekey
   - Provides mutual authentication
   - Bob can verify it's really Alice
 
@@ -214,9 +216,11 @@ Alice combines her keys with Bob's keys through multiple DH operations:
   - Provides mutual authentication from the other direction
   - Alice can verify it's really Bob
 
-- **DH3 = DH(EK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)** - Alice's ephemeral private key × Bob's signed public key
+- **DH3 = DH(EK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)** - Alice's ephemeral private key × Bob's signed public prekey
   - Provides forward secrecy
   - Even if long-term keys are compromised later, this conversation stays secret
+
+<div style="clear: both;"></div>
 
 **Step 4: Add Post-Quantum Protection**
 
@@ -236,19 +240,6 @@ SK = KDF(DH1 \parallel DH2 \parallel DH3 \parallel SS)
 $$
 
 This **SK (Shared Key)** is now the secret Alice and Bob share. Alice will use it to encrypt her message.
-
-<div style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.15), rgba(13, 148, 136, 0.15)); border-left: 4px solid #14b8a6; padding: 1.5em; border-radius: 8px; margin: 2em 0;">
-
-**💡 Why multiple DH exchanges?**
-
-Each DH operation serves a specific security purpose:
-- **DH1 & DH2**: Mutual authentication - both parties verify each other's identity
-- **DH3**: Forward secrecy - protects past messages even if long-term keys leak later
-- **SS**: Post-quantum security - protects against future quantum computer attacks
-
-Combining them means an attacker would need to break ALL of them to decrypt the message. This is called "defense in depth."
-
-</div>
 
 **At this point:**
 - Alice has computed the shared secret SK
@@ -354,16 +345,20 @@ Bob uses the identifiers to determine which of his private keys to use:
 
 **Step 3: Perform the Same DH Operations**
 
+<img src="/_attachments/e2ee/DH-ops.png" alt="Diffie-Hellman key exchanges between Alice and Bob" style="float: right; margin: 0 0 1em 1em; max-width: 300px;">
+
 Bob performs the exact same Diffie-Hellman exchanges as Alice, but using his private keys:
 
-- **DH1 = DH(IK<sub>A_pub</sub>, SPK<sub>B_priv</sub>)** - Alice's identity public key × Bob's signed prekey private key
+- **DH1 = DH(IK<sub>A_pub</sub>, SPK<sub>B_priv</sub>)** - Alice's identity public key × Bob's signed private prekey
 - **DH2 = DH(EK<sub>A_pub</sub>, IK<sub>B_priv</sub>)** - Alice's ephemeral public key × Bob's identity private key
-- **DH3 = DH(EK<sub>A_pub</sub>, SPK<sub>B_priv</sub>)** - Alice's ephemeral public key × Bob's signed prekey private key
+- **DH3 = DH(EK<sub>A_pub</sub>, SPK<sub>B_priv</sub>)** - Alice's ephemeral public key × Bob's signed private prekey
 
 Because of how Diffie-Hellman works, Bob gets the exact same values that Alice computed:
 - DH(IK<sub>A_pub</sub>, SPK<sub>B_priv</sub>) = DH(IK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)
 - DH(EK<sub>A_pub</sub>, IK<sub>B_priv</sub>) = DH(EK<sub>A_priv</sub>, IK<sub>B_pub</sub>)
 - DH(EK<sub>A_pub</sub>, SPK<sub>B_priv</sub>) = DH(EK<sub>A_priv</sub>, SPK<sub>B_pub</sub>)
+
+<div style="clear: both;"></div>
 
 **Step 4: Decapsulate the PQ Shared Secret**
 
@@ -414,7 +409,7 @@ Alice and Bob have successfully established end-to-end encrypted communication:
 - ✅ **Mutual authentication** - Both parties verified each other's identities
 - ✅ **Forward secrecy** - Even if long-term keys leak later, this conversation stays secret
 - ✅ **Post-quantum security** - Protected against future quantum computers
-- ✅ **Zero server knowledge** - The server never saw the plaintext or shared key
+- ✅ **Zero knowledge server** - The server never saw the plaintext or shared key
 - ✅ **Asynchronous** - Worked even though Bob was offline when Alice sent the message
 
 </div>
@@ -423,7 +418,6 @@ Alice and Bob have successfully established end-to-end encrypted communication:
 - Bob has Alice's plaintext message
 - They share a secure communication channel
 - Neither the server nor any eavesdropper can read their messages
-- The protocol can continue with additional messages (using the Double Ratchet algorithm, which we'll cover in Part 2)
 
 ---
 
@@ -440,5 +434,6 @@ This diagram shows the entire flow from Bob publishing his keys, through Alice c
 ## References
 
 - Signal. ["The PQXDH Key Agreement Protocol."](https://signal.org/docs/specifications/pqxdh/) Signal Specifications.
+- Signal. ["libsignal - Signal Protocol library."](https://github.com/signalapp/libsignal) GitHub Repository.
 - Okta. ["Privacy vs. Security: What's the Difference?"](https://www.okta.com/identity-101/privacy-vs-security/) Okta Identity 101.
 
