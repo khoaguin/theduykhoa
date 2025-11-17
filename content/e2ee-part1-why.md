@@ -431,6 +431,18 @@ Now that you understand each phase in detail, here's the complete picture showin
 
 This diagram shows the entire flow from Bob publishing his keys, through Alice computing the shared secret and sending her encrypted message, to Bob decrypting and reading the message. Each component works together to provide mutual authentication, forward secrecy, and post-quantum security.
 
+---
+
+## What's Next?
+
+**In Part 2**, we'll roll up our sleeves and implement the PQXDH protocol in Rust using `libsignal`. We'll learn how to:
+- Set up the Rust development environment with libsignal
+- Generate and manage cryptographic keys
+- Implement the complete key exchange flow
+- Build a working proof-of-concept
+
+**In Part 3**, we'll create a practical demo application that encrypts and shares files end-to-end using everything we've built.
+
 ## References
 
 - Signal. ["The PQXDH Key Agreement Protocol."](https://signal.org/docs/specifications/pqxdh/) Signal Specifications.
