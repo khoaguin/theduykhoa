@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Zero Setup Federated Learning with 3 Google Colab Notebooks"
+title: "Zero Setup Federated Learning (using Google Colab)"
 summary: "A short note on my OpenMined post: training across private datasets with nothing but Gmail accounts and Colab notebooks"
 author: khoaguin
 date: '2026-08-29'
