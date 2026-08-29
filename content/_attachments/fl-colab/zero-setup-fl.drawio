@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.3.1">
+  <diagram name="zero-setup-fl">
+    <mxGraphModel dx="1900" dy="1120" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1060" math="0" shadow="0" background="#0a0f1c">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Zero-Setup Federated Learning" style="text;html=1;align=left;verticalAlign=middle;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=26;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="30" width="900" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="three people, three Google Colab tabs — no installs, no servers, no VPN" style="text;html=1;align=left;verticalAlign=middle;fontColor=#9fb0c3;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="70" y="72" width="900" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gm" value="Global model&#xa;&#xa;trained on data the data&#xa;scientist never saw" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0a2b1e;strokeColor=#34d399;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="150" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="agg" value="Flower aggregator&#xa;&#xa;averages the weight&#xa;updates (FedAvg)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0a2b1e;strokeColor=#34d399;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="360" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ds" value="DS  ·  Data Scientist&#xa;Colab notebook&#xa;&#xa;writes the training code&#xa;against mock data only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0c2530;strokeColor=#2dd4bf;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="600" width="300" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="net" value="SyftBox network   —   syncs over each user's own Google Drive" style="swimlane;startSize=40;html=1;fillColor=none;strokeColor=#8b98ab;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=14;fontStyle=1;verticalAlign=middle;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="150" width="620" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="site1" value="DO1's&#xa;datasite" style="rhombus;whiteSpace=wrap;html=1;fillColor=#221a33;strokeColor=#a78bfa;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;fontStyle=1;" vertex="1" parent="net">
+          <mxGeometry x="40" y="60" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="site2" value="DO2's&#xa;datasite" style="rhombus;whiteSpace=wrap;html=1;fillColor=#221a33;strokeColor=#a78bfa;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;fontStyle=1;" vertex="1" parent="net">
+          <mxGeometry x="330" y="250" width="240" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="do1" value="DO1  ·  Data Owner&#xa;Colab notebook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0c2530;strokeColor=#2dd4bf;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="840" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="db1" value="private_path&#xa;the real rows" style="shape=cylinder3;boundedLbl=1;whiteSpace=wrap;html=1;fillColor=#33240a;strokeColor=#e8b339;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="840" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="each owner publishes two paths: mock_path (fake rows, what the DS codes against)  +  private_path (the real rows)" style="text;html=1;align=left;verticalAlign=middle;fontColor=#e8b339;fontFamily=Courier New;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="975" width="1000" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="do2" value="DO2  ·  Data Owner&#xa;Colab notebook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0c2530;strokeColor=#2dd4bf;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="400" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="db2" value="private_path&#xa;the real rows" style="shape=cylinder3;boundedLbl=1;whiteSpace=wrap;html=1;fillColor=#33240a;strokeColor=#e8b339;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1590" y="190" width="160" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1a" value="1. submit_python_job()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2dd4bf;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ds" target="site1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="620" y="637" /><mxPoint x="620" y="290" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e1b" value="1." style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2dd4bf;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=1;exitY=0.6;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ds" target="site2">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="660" y="690" /><mxPoint x="660" y="480" /></Array></mxGeometry>
+        </mxCell>
+
+        <mxCell id="e2a" value="2. the job lands&#xa;in the datasite" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#a78bfa;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="site1" target="do1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="860" y="740" /><mxPoint x="850" y="740" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e2b" value="2." style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#a78bfa;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;" edge="1" parent="1" source="site2" target="do2">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1420" y="480" /><mxPoint x="1420" y="442" /></Array></mxGeometry>
+        </mxCell>
+
+        <mxCell id="e3a" value="3. owner reads the code, approve(),&#xa;then trains on the real rows" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e8b339;fontColor=#e8b339;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=bottom;" edge="1" parent="1" source="do1" target="db1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3b" value="3." style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e8b339;fontColor=#e8b339;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="do2" target="db2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e4a" value="4. weight updates only&#xa;— never the rows" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#34d399;fontColor=#34d399;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="do1" target="site1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1010" y="790" /><mxPoint x="1010" y="340" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e4b" value="4." style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#34d399;fontColor=#34d399;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="do2" target="site2">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1670" y="680" /><mxPoint x="1150" y="680" /></Array></mxGeometry>
+        </mxCell>
+
+        <mxCell id="e5" value="5. the DS pulls the updates" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#34d399;fontColor=#34d399;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=0;exitY=0.06;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="net" target="agg">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="460" y="178" /><mxPoint x="460" y="330" /><mxPoint x="305" y="330" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="6. FedAvg" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#34d399;fontColor=#34d399;fontFamily=Courier New;fontSize=12;labelBackgroundColor=#0a0f1c;exitX=0.3;exitY=0;exitDx=0;exitDy=0;entryX=0.3;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="agg" target="gm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="and repeat, round after round" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#8b98ab;fontColor=#9fb0c3;fontFamily=Courier New;fontSize=11;labelBackgroundColor=#0a0f1c;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gm" target="ds">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="40" y="205" /><mxPoint x="40" y="675" /></Array></mxGeometry>
+        </mxCell>
+
+        <mxCell id="legend" value="Legend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#8b98ab;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=12;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="810" width="440" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="lg1" value="" style="rounded=0;html=1;fillColor=#0c2530;strokeColor=#2dd4bf;" vertex="1" parent="legend">
+          <mxGeometry x="14" y="34" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg1t" value="Colab notebook (a person)" style="text;html=1;align=left;verticalAlign=middle;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="32" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2" value="" style="rhombus;html=1;fillColor=#221a33;strokeColor=#a78bfa;" vertex="1" parent="legend">
+          <mxGeometry x="12" y="58" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2t" value="Datasite — the owner's SyftBox inbox" style="text;html=1;align=left;verticalAlign=middle;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="58" width="360" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg3" value="" style="shape=cylinder3;html=1;fillColor=#33240a;strokeColor=#e8b339;" vertex="1" parent="legend">
+          <mxGeometry x="14" y="82" width="26" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="lg3t" value="Private data — stays in that Colab" style="text;html=1;align=left;verticalAlign=middle;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="84" width="360" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg4" value="" style="rounded=0;html=1;fillColor=#0a2b1e;strokeColor=#34d399;" vertex="1" parent="legend">
+          <mxGeometry x="14" y="112" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="lg4t" value="Weights only travel here" style="text;html=1;align=left;verticalAlign=middle;fontColor=#dbe4f0;fontFamily=Courier New;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry x="50" y="110" width="300" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
