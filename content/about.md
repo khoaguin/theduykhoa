@@ -32,7 +32,7 @@ I'm interested in AI Safety, especially evaluations, zero-trust system deploymen
 ## Interests
 
 - AI & AI Safety
-- Apllied AI Systems
+- Applied AI Systems
 - Cryptography & Cybersecurity
 - Distributed systems
 - Programming Languages
