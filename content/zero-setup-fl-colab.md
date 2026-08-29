@@ -5,7 +5,7 @@ summary: "A short note on my OpenMined post: training across private datasets wi
 author: khoaguin
 date: '2026-08-29'
 keywords: federated-learning, syftbox, flower, google-colab, ppml, privacy, openmined
-thumbnail: /_attachments/fl-colab/zero-setup-fl.png
+thumbnail: /_attachments/fl-colab/zero-setup-fl-thumb.png
 permalink: /blog/zero-setup-federated-learning-colab
 tags:
   - ppml
@@ -23,7 +23,7 @@ That's the whole idea. The hard part has never been the math — it's that maili
 
 ## Architecture
 
-<img src="/_attachments/fl-colab/zero-setup-fl.svg" style="width: 100%; height: auto;" alt="Architecture: data scientist Colab, SyftBox network with two datasites, two data-owner Colabs holding private data">
+<img src="/_attachments/fl-colab/zero-setup-fl.png" style="width: 100%; height: auto;" alt="Architecture: data scientist Colab, SyftBox network with two datasites, two data-owner Colabs holding private data">
 
 Three people, three Google Colab tabs. **The transport is each participant's own Google Drive**, which everybody already has, so there is nothing to install and no server to stand up.
 
