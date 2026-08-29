@@ -16,3 +16,9 @@ build:
 [group('deploy')]
 deploy:
     npx quartz sync
+# re-export a .drawio to PNG + theme-correct SVG (draw.io inverts dark-authored diagrams; the script un-inverts them)
+[group('build')]
+diagram FILE:
+    drawio -x -f png --width 2000 -b 0 -o "{{without_extension(FILE)}}.png" "{{FILE}}"
+    drawio -x -f svg -o "{{without_extension(FILE)}}.svg" "{{FILE}}"
+    python3 scripts/fix-drawio-svg.py "{{without_extension(FILE)}}.svg"

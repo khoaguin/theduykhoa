@@ -23,7 +23,7 @@ That's the whole idea. The hard part has never been the math — it's that maili
 
 ## Architecture
 
-<img src="/_attachments/fl-colab/zero-setup-fl.png" style="width: 100%; height: auto;" alt="Architecture: data scientist Colab, SyftBox network with two datasites, two data-owner Colabs holding private data">
+<img src="/_attachments/fl-colab/zero-setup-fl.svg" style="width: 100%; height: auto;" alt="Architecture: data scientist Colab, SyftBox network with two datasites, two data-owner Colabs holding private data">
 
 Three people, three Google Colab tabs. **The transport is each participant's own Google Drive**, which everybody already has, so there is nothing to install and no server to stand up.
 
